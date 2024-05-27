@@ -1,0 +1,28 @@
+.login {
+    padding: 20px;
+  }
+  
+  .login form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .login input {
+    margin-bottom: 10px;
+    padding: 10px;
+    font-size: 1em;
+  }
+  
+  .login button {
+    padding: 10px;
+    font-size: 1em;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .login button:hover {
+    background-color: #0056b3;
+  }
+  

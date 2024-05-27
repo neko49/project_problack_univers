@@ -1,0 +1,31 @@
+/* src/components/SubscriptionPlans/SubscriptionPlans.css */
+
+.subscription-plans {
+    padding: 50px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: 20px;
+    border-radius: 8px;
+  }
+  
+  .plans {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .plan {
+    padding: 20px;
+    background-color: #f8f9fa;
+    margin: 10px 0;
+    border-radius: 8px;
+  }
+  
+  .plan h2 {
+    margin-top: 0;
+  }
+  
+  .plan ul {
+    list-style: none;
+    padding-left: 0;
+  }
+  

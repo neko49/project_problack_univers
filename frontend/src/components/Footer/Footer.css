@@ -1,0 +1,46 @@
+.footer {
+  background: #222;
+  color: #fff;
+  font-size: 14px;
+}
+
+.footer h4 {
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+.footer ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer ul li a {
+  color: #bbb;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.footer ul li a:hover {
+  color: #fff;
+}
+
+.social-links a {
+  display: inline-block;
+  margin-right: 10px;
+  font-size: 20px;
+  color: #bbb;
+  transition: color 0.3s;
+}
+
+.social-links a:hover {
+  color: #fff;
+}
+
+.bg-darker {
+  background: #111;
+}
+
+.bg-darker p {
+  margin: 0;
+  font-size: 14px;
+}
