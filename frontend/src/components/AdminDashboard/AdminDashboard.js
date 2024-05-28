@@ -1,12 +1,23 @@
-// src/components/AdminDashboard/AdminDashboard.js
 import React from 'react';
 import './AdminDashboard.css';
+import Sidebar from './Sidebar';
+import Topbar from './Topbar';
+import Overview from './Overview';
+import ShopManagement from './ShopManagement';
+import Analytics from './Analytics';
 
 const AdminDashboard = () => {
   return (
-    <div className="admin-dashboard">
-      <h2>Admin Dashboard</h2>
-      <p>Welcome to the admin dashboard.</p>
+    <div>
+      <div className="admin-dashboard">
+        <Sidebar />
+        <div className="main-content">
+          <Topbar />
+          <Overview />
+          <ShopManagement />
+          <Analytics />
+        </div>
+      </div>
     </div>
   );
 };

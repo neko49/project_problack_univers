@@ -12,6 +12,8 @@ import News from './components/News/News';
 import About from './components/About/About';
 import Footer from './components/Footer/Footer';
 import './App.css';
+import Boutique from './components/Boutique/Boutique';
+import BoutiqueDetails from './components/BoutiqueDetails/BoutiqueDetails';
 
 const App = () => {
   return (
@@ -27,6 +29,8 @@ const App = () => {
         <Route path="/contact" element={<Contact />} />
         <Route path="/news" element={<News />} />
         <Route path="/about" element={<About />} />
+        <Route path="/boutique" element={<Boutique />} />
+        <Route path="/boutique/:id" element={<BoutiqueDetails />} />
       </Routes>
       <Footer />
     </Router>

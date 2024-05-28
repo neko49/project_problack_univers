@@ -1,19 +1,46 @@
-/* AdminDashboard.css */
-
 .admin-dashboard {
-    display: flex;
-  }
-  
-  .main-content {
-    margin-left: 250px; /* Même largeur que le Sidebar */
-    padding: 20px;
-    width: calc(100% - 250px); /* Ajuster la largeur pour éviter le débordement */
-    background: #f4f4f9;
-    height: 100vh;
-    overflow-y: auto;
-  }
-  
-  h1, h2 {
-    color: #333;
-  }
-  
+  display: flex;
+}
+
+.sidebar {
+  width: 250px;
+  height: 100vh;
+  background: #333;
+  color: #fff;
+  position: fixed;
+  top: 0;
+  left: 0;
+  padding: 20px;
+}
+
+.sidebar h2 {
+  color: #fff;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar ul li {
+  margin: 20px 0;
+}
+
+.sidebar ul li a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.sidebar ul li a:hover {
+  text-decoration: underline;
+}
+
+.main-content {
+  margin-left: 250px;
+  padding: 20px;
+  width: calc(100% - 250px);
+}
+
+.navbar {
+  z-index: 1;
+}

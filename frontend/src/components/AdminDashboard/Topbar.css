@@ -1,0 +1,11 @@
+.topbar {
+    background: #f8f8f8;
+    padding: 10px 20px;
+    border-bottom: 1px solid #ddd;
+    margin-left: 250px;
+  }
+  
+  .topbar h1 {
+    margin: 0;
+  }
+  
