@@ -1,34 +1,97 @@
 .homepage {
-    padding: 20px;
-  }
-  
-  .slide {
-    position: relative;
-  }
-  
-  .search-overlay {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: #fff;
-    background: rgba(0, 0, 0, 0.5);
-    padding: 20px;
-    border-radius: 10px;
-  }
-  
-  .statistics-section {
-    margin-top: 50px;
-  }
-  
-  .statistic {
-    margin-top: 20px;
-    font-size: 1.5em;
-  }
-  
-  .statistic p {
-    margin-top: 10px;
-    font-size: 1em;
-    color: #555;
-  }
-  
+  padding: 20px;
+}
+
+.slide {
+  position: relative;
+}
+
+.shop-slide {
+  padding: 15px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.slide img {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+}
+
+.search-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #fff;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+
+
+.shop-carousel {
+  margin-top: 50px;
+}
+
+.shop-slide {
+  padding: 20px;
+  text-align: center;
+}
+
+.shop-slide img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.shop-slide h3 {
+  margin-top: 10px;
+}
+
+.shop-slide p {
+  margin-top: 10px;
+  color: #555;
+}
+
+
+/* Statistics section styling */
+.statistics-section {
+  margin-top: 50px;
+  padding: 20px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.statistics-section .statistic {
+  margin-bottom: 20px;
+}
+
+.statistics-section .statistic p {
+  margin-top: 10px;
+  font-size: 1.2em;
+  color: #333;
+}
+
+.statistics-section .statistic span {
+  display: block;
+  font-size: 2.5em;
+  color: #007bff;
+}
+
+.statistic {
+  margin-top: 20px;
+}
+
+.statistic p {
+  margin-top: 10px;
+  font-size: 1em;
+  color: #555;
+}
