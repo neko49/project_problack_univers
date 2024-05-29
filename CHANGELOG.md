@@ -11,3 +11,6 @@ Toutes les modifications notables apportées à ce projet seront documentées da
 
 ## [1.0.1] Jaures - 2024-05-28
 - Ajouté : Implémentation des boutiques avec fonctionnalités de login signup.
+
+## [1.0.2] Jaures - 2024-05-29
+- Ajouté : Ajustement details des boutiques, homepage et recherche(pas encore finis).
