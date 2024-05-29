@@ -41,16 +41,21 @@ const BoutiqueDetails = () => {
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');
-      await axios.post(`/api/shops/${id}/reviews`, review, {
+      const response = await axios.post(`/api/shops/${id}/reviews`, review, {
         headers: { Authorization: `Bearer ${token}` }
       });
+
+      // Log the response for debugging
+      console.log("Review submitted successfully:", response.data);
+
       // Réinitialisez le formulaire après soumission
       setReview({ name: '', email: '', comment: '', quality: '', location: '', price: '', service: '' });
+
       // Rechargez les détails de la boutique pour afficher le nouveau commentaire
-      const response = await axios.get(`/api/shops/${id}`, {
+      const updatedShop = await axios.get(`/api/shops/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      setShop(response.data);
+      setShop(updatedShop.data);
     } catch (error) {
       console.error('Error submitting review:', error);
     }
