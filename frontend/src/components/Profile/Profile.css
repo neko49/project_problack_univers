@@ -1,4 +1,48 @@
 .profile {
+    max-width: 600px;
+    margin: 0 auto;
     padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+  }
+  
+  .profile.business {
+    background-color: #f0f8ff; /* Light blue for business */
+  }
+  
+  .profile.client {
+    background-color: #f8f8f8; /* Light grey for client */
+  }
+  
+  .profile h1 {
+    font-size: 2em;
+    margin-bottom: 20px;
+  }
+  
+  .profile img.profile-image {
+    max-width: 150px;
+    margin-bottom: 20px;
+    border-radius: 50%;
+  }
+  
+  .profile p {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+  }
+  
+  .profile button {
+    padding: 10px 20px;
+    font-size: 1em;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 20px;
+  }
+  
+  .profile button:hover {
+    background-color: #0056b3;
   }
   

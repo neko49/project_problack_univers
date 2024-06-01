@@ -35,6 +35,24 @@ exports.getShopById = async (req, res) => {
   }
 };
 
+exports.updateShop = async (req, res) => {
+    try {
+      const shop = await Shop.findById(req.params.id);
+      if (!shop) {
+        return res.status(404).json({ message: 'Shop not found' });
+      }
+      if (shop.admin.toString() !== req.user.userId) {
+        return res.status(403).json({ message: 'Access denied' });
+      }
+  
+      Object.assign(shop, req.body);
+      const updatedShop = await shop.save();
+      res.json(updatedShop);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  };
+
 exports.deleteShop = async (req, res) => {
   try {
     const shop = await Shop.findById(req.params.id);
