@@ -119,7 +119,7 @@ exports.getCategoriesAndStats = async (req, res) => {
     const categoriesSet = new Set();
     let totalReviews = 0;
     let totalVisitors = 0;
-    let newAnnouncements = 0; // Vous devez remplacer cela par une vraie logique
+    let newAnnouncements = 80; // Vous devez remplacer cela par une vraie logique
 
     shops.forEach(shop => {
       shop.categories.forEach(category => categoriesSet.add(category));
