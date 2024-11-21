@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
+import { API_BASE_URL } from '../../services/apiService';
 import Slider from 'react-slick';
 import CountUp from 'react-countup';
 import VisibilitySensor from 'react-visibility-sensor';
@@ -23,7 +24,7 @@ const HomePage = () => {
   useEffect(() => {
     const fetchCategoriesAndStats = async () => {
       try {
-        const response = await axios.get('/api/shops/categories/stats');
+        const response = await axios.get(`${API_BASE_URL}/api/shops/categories/stats`);
         setCategories(response.data.categories);
         setStats({
           totalReviews: response.data.totalReviews,

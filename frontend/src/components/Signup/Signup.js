@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { API_BASE_URL } from '../../services/apiService'; // Import de l'URL de base
 import './Signup.css';
 
 const Signup = () => {
@@ -10,7 +11,12 @@ const Signup = () => {
   const [lastName, setLastName] = useState('');
   const [role, setRole] = useState('client');
   const [profileImage, setProfileImage] = useState(null);
+  const [profileImage, setProfileImage] = useState(null);
   const navigate = useNavigate();
+
+  const handleImageChange = (e) => {
+    setProfileImage(e.target.files[0]);
+  };
 
   const handleImageChange = (e) => {
     setProfileImage(e.target.files[0]);
@@ -29,7 +35,7 @@ const Signup = () => {
     }
 
     try {
-      await axios.post('/api/users/register', formData, {
+      await axios.post(`${API_BASE_URL}/api/users/register`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -40,7 +46,7 @@ const Signup = () => {
         navigate('/login');
       }
     } catch (error) {
-      console.error('Registration error:', error.response.data.message);
+      console.error('Registration error:', error.response?.data?.message || error.message);
     }
   };
 
@@ -76,6 +82,11 @@ const Signup = () => {
           <option value="client">Client</option>
           <option value="business">Business</option>
         </select>
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleImageChange}
+        />
         <input
           type="file"
           accept="image/*"
