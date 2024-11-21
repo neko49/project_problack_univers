@@ -12,14 +12,24 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 5001;
 
+// Configuration des options CORS
+const corsOptions = {
+    origin: [
+        'https://projectproblackunivers-production.up.railway.app/', // Remplacez par l'URL de votre frontend sur Vercel
+        'http://localhost:3000' // Pour le développement local
+    ],
+    credentials: true, // Si vous utilisez des cookies ou des sessions
+};
+app.use(cors(corsOptions));
+
 mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log('MongoDB connected'))
     .catch(err => console.log(err));
 
 app.use(express.json());
-app.use(cors());
 app.use(helmet());
 app.use(morgan('dev'));
+
 // Configurez le serveur pour servir les fichiers statiques du dossier "uploads"
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
