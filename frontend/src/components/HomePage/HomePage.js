@@ -13,9 +13,9 @@ import logoImage2 from '../media/caroussel/majestyhair-des-produits-capillaires.
 import logoImage3 from '../media/caroussel/alimentation.jpg';
 
 const HomePage = () => {
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState([]); // Tableau vide par défaut
   const [stats, setStats] = useState({ totalReviews: 0, totalVisitors: 0, newAnnouncements: 0 });
-  const [shops, setShops] = useState([]);
+  const [shops, setShops] = useState([]); // Tableau vide par défaut
   const [searchTerm, setSearchTerm] = useState('');
   const [searchLocation, setSearchLocation] = useState('');
   const [searchCategory, setSearchCategory] = useState('');
@@ -25,11 +25,11 @@ const HomePage = () => {
     const fetchCategoriesAndStats = async () => {
       try {
         const response = await axios.get(`${API_BASE_URL}/api/shops/categories/stats`);
-        setCategories(response.data.categories);
+        setCategories(response.data.categories || []); // Gestion des données nulles ou undefined
         setStats({
-          totalReviews: response.data.totalReviews,
-          totalVisitors: response.data.totalVisitors,
-          newAnnouncements: response.data.newAnnouncements
+          totalReviews: response.data.totalReviews || 0,
+          totalVisitors: response.data.totalVisitors || 0,
+          newAnnouncements: response.data.newAnnouncements || 0,
         });
       } catch (error) {
         console.error('Error fetching categories and stats:', error);
@@ -38,8 +38,8 @@ const HomePage = () => {
 
     const fetchShops = async () => {
       try {
-        const response = await axios.get('/api/shops');
-        setShops(response.data);
+        const response = await axios.get(`${API_BASE_URL}/api/shops`); // Corrigez l'URL pour pointer vers votre API
+        setShops(response.data || []); // Gestion des données nulles ou undefined
       } catch (error) {
         console.error('Error fetching shops:', error);
       }
@@ -52,7 +52,7 @@ const HomePage = () => {
   const handleSearch = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.get('/api/shops/search', {
+      const response = await axios.get(`${API_BASE_URL}/api/shops/search`, {
         params: {
           term: searchTerm,
           location: searchLocation,
@@ -60,7 +60,7 @@ const HomePage = () => {
         },
       });
       console.log("Résultats de la recherche :", response.data);
-      setShops(response.data);
+      setShops(response.data || []); // Mise à jour des résultats de recherche
     } catch (error) {
       console.error('Error searching shops:', error.response ? error.response.data : error.message);
     }
@@ -69,9 +69,9 @@ const HomePage = () => {
   const handleShopDetails = (shopId) => {
     const token = localStorage.getItem('token');
     if (!token) {
-      navigate('/login');
+      navigate('/login'); // Rediriger vers la page de connexion si pas de token
     } else {
-      navigate(`/boutique/${shopId}`);
+      navigate(`/boutique/${shopId}`); // Rediriger vers les détails de la boutique
     }
   };
 
@@ -201,14 +201,18 @@ const HomePage = () => {
       <div className="container shop-carousel">
         <h2 className="text-center">Nos Boutiques</h2>
         <Slider {...shopSettings}>
-          {shops.map((shop, index) => (
-            <div key={index} className="shop-slide" onClick={() => handleShopDetails(shop._id)}>
-              <img src={shop.photos[0]} alt={shop.name} className="img-fluid" />
-              <h3 className="text-center">{shop.name}</h3>
-              <p className="text-center">{shop.description}</p>
-              <button className="btn btn-primary d-block mx-auto">Voir les détails</button>
-            </div>
-          ))}
+          {shops.length > 0 ? (
+            shops.map((shop, index) => (
+              <div key={index} className="shop-slide" onClick={() => handleShopDetails(shop._id)}>
+                <img src={shop.photos[0]} alt={shop.name} className="img-fluid" />
+                <h3 className="text-center">{shop.name}</h3>
+                <p className="text-center">{shop.description}</p>
+                <button className="btn btn-primary d-block mx-auto">Voir les détails</button>
+              </div>
+            ))
+          ) : (
+            <p className="text-center">Aucune boutique trouvée</p>
+          )}
         </Slider>
       </div>
       <div className="container statistics-section">
