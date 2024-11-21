@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import "slick-carousel/slick/slick.css"; 
+import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from 'react-slick';
 import CountUp from 'react-countup';
@@ -25,6 +25,7 @@ const HomePage = () => {
     const fetchCategoriesAndStats = async () => {
       try {
         const response = await axios.get(`${API_BASE_URL}/api/shops/categories/stats`);
+        console.log('Categories and stats:', response.data); // Débogage
         setCategories(response.data.categories || []); // Gestion des données nulles ou undefined
         setStats({
           totalReviews: response.data.totalReviews || 0,
@@ -38,10 +39,12 @@ const HomePage = () => {
 
     const fetchShops = async () => {
       try {
-        const response = await axios.get(`${API_BASE_URL}/api/shops`); // Corrigez l'URL pour pointer vers votre API
+        const response = await axios.get(`${API_BASE_URL}/api/shops`);
+        console.log('Shops data:', response.data); // Débogage
         setShops(response.data || []); // Gestion des données nulles ou undefined
       } catch (error) {
         console.error('Error fetching shops:', error);
+        setShops([]); // Réinitialisez les données en cas d'erreur
       }
     };
 
@@ -59,7 +62,7 @@ const HomePage = () => {
           category: searchCategory,
         },
       });
-      console.log("Résultats de la recherche :", response.data);
+      console.log('Search results:', response.data); // Débogage
       setShops(response.data || []); // Mise à jour des résultats de recherche
     } catch (error) {
       console.error('Error searching shops:', error.response ? error.response.data : error.message);
@@ -83,7 +86,7 @@ const HomePage = () => {
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 5000,
-    arrows: false, 
+    arrows: false,
   };
 
   const shopSettings = {
@@ -123,7 +126,7 @@ const HomePage = () => {
                 onChange={(e) => setSearchCategory(e.target.value)}
               >
                 <option value="">Toutes les catégories</option>
-                {categories.map((category, index) => (
+                {Array.isArray(categories) && categories.map((category, index) => (
                   <option key={index} value={category}>{category}</option>
                 ))}
               </select>
@@ -156,7 +159,7 @@ const HomePage = () => {
                 onChange={(e) => setSearchCategory(e.target.value)}
               >
                 <option value="">Toutes les catégories</option>
-                {categories.map((category, index) => (
+                {Array.isArray(categories) && categories.map((category, index) => (
                   <option key={index} value={category}>{category}</option>
                 ))}
               </select>
@@ -189,7 +192,7 @@ const HomePage = () => {
                 onChange={(e) => setSearchCategory(e.target.value)}
               >
                 <option value="">Toutes les catégories</option>
-                {categories.map((category, index) => (
+                {Array.isArray(categories) && categories.map((category, index) => (
                   <option key={index} value={category}>{category}</option>
                 ))}
               </select>
@@ -201,7 +204,7 @@ const HomePage = () => {
       <div className="container shop-carousel">
         <h2 className="text-center">Nos Boutiques</h2>
         <Slider {...shopSettings}>
-          {shops.length > 0 ? (
+          {Array.isArray(shops) && shops.length > 0 ? (
             shops.map((shop, index) => (
               <div key={index} className="shop-slide" onClick={() => handleShopDetails(shop._id)}>
                 <img src={shop.photos[0]} alt={shop.name} className="img-fluid" />
