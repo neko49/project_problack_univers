@@ -1,33 +1,39 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { API_BASE_URL } from '../../services/apiService'; // Import de l'URL de base
 import './Profile.css';
 
 const Profile = () => {
-  const [user, setUser] = useState(null);
-  const navigate = useNavigate();
+  const [profile, setProfile] = useState(null);
 
   useEffect(() => {
     const fetchProfile = async () => {
-      const token = localStorage.getItem('token');
-      const response = await axios.get('/api/users/profile', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setUser(response.data);
+      try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get(`${API_BASE_URL}/api/users/profile`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setProfile(response.data);
+      } catch (error) {
+        console.error('Error fetching profile:', error.response?.data?.message || error.message);
+      }
     };
+
     fetchProfile();
   }, []);
 
-  if (!user) return <div>Loading...</div>;
+  if (!profile) {
+    return <div>Loading...</div>;
+  }
 
   return (
-    <div className={`profile ${user.role}`}>
-      <h1>Profile</h1>
-      {user.profileImage && <img src={`../../../../backend/${user.profileImage}`} alt="Profile" className="profile-image" />}
-      <p><strong>Email:</strong> {user.email}</p>
-      <p><strong>Name:</strong> {user.firstName} {user.lastName}</p>
-      <p><strong>Role:</strong> {user.role}</p>
-      <button onClick={() => navigate('/profile/update')}>Edit Profile</button>
+    <div className="profile">
+      <h1>{profile.firstName} {profile.lastName}</h1>
+      <img src={`${API_BASE_URL}/${profile.profileImage}`} alt="Profile" />
+      <p>Email: {profile.email}</p>
+      <p>Role: {profile.role}</p>
     </div>
   );
 };

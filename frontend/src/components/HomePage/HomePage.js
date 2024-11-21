@@ -5,6 +5,7 @@ import Slider from 'react-slick';
 import CountUp from 'react-countup';
 import VisibilitySensor from 'react-visibility-sensor';
 import axios from 'axios';
+import { API_BASE_URL } from '../../services/apiService';
 import { useNavigate } from 'react-router-dom';
 import './HomePage.css';
 import logoImage1 from '../media/caroussel/princesse-abibiche.jpg';
@@ -23,7 +24,7 @@ const HomePage = () => {
   useEffect(() => {
     const fetchCategoriesAndStats = async () => {
       try {
-        const response = await axios.get('/api/shops/categories/stats');
+        const response = await axios.get(`${API_BASE_URL}/api/shops/categories/stats`);
         setCategories(response.data.categories);
         setStats({
           totalReviews: response.data.totalReviews,

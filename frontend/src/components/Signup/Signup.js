@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { API_BASE_URL } from '../../services/apiService'; // Import de l'URL de base
 import './Signup.css';
 
 const Signup = () => {
@@ -29,7 +30,7 @@ const Signup = () => {
     }
 
     try {
-      await axios.post('/api/users/register', formData, {
+      await axios.post(`${API_BASE_URL}/api/users/register`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -40,7 +41,7 @@ const Signup = () => {
         navigate('/login');
       }
     } catch (error) {
-      console.error('Registration error:', error.response.data.message);
+      console.error('Registration error:', error.response?.data?.message || error.message);
     }
   };
 
