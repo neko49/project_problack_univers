@@ -11,7 +11,12 @@ const Signup = () => {
   const [lastName, setLastName] = useState('');
   const [role, setRole] = useState('client');
   const [profileImage, setProfileImage] = useState(null);
+  const [profileImage, setProfileImage] = useState(null);
   const navigate = useNavigate();
+
+  const handleImageChange = (e) => {
+    setProfileImage(e.target.files[0]);
+  };
 
   const handleImageChange = (e) => {
     setProfileImage(e.target.files[0]);
@@ -77,6 +82,11 @@ const Signup = () => {
           <option value="client">Client</option>
           <option value="business">Business</option>
         </select>
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleImageChange}
+        />
         <input
           type="file"
           accept="image/*"
