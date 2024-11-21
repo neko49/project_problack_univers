@@ -15,7 +15,7 @@ const PORT = process.env.PORT || 5001;
 // Configuration des options CORS
 const corsOptions = {
     origin: [
-        'https://projectproblackunivers-production.up.railway.app/', // Remplacez par l'URL de votre frontend sur Vercel
+        'https://problack-univers.vercel.app/', // Remplacez par l'URL de votre frontend sur Vercel
         'http://localhost:3000' // Pour le développement local
     ],
     credentials: true, // Si vous utilisez des cookies ou des sessions
