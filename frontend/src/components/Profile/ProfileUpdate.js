@@ -1,36 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
+import { API_BASE_URL } from '../../services/apiService'; // Import de l'URL de base
 import './ProfileUpdate.css';
 
 const ProfileUpdate = () => {
-  const [user, setUser] = useState(null);
+  const [email, setEmail] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [profileImage, setProfileImage] = useState(null);
-  const [formData, setFormData] = useState({
-    email: '',
-    firstName: '',
-    lastName: '',
-  });
-
-  useEffect(() => {
-    const fetchProfile = async () => {
-      const token = localStorage.getItem('token');
-      const response = await axios.get('/api/users/profile', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setUser(response.data);
-      setFormData({
-        email: response.data.email,
-        firstName: response.data.firstName,
-        lastName: response.data.lastName,
-      });
-    };
-    fetchProfile();
-  }, []);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
 
   const handleImageChange = (e) => {
     setProfileImage(e.target.files[0]);
@@ -38,52 +15,56 @@ const ProfileUpdate = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const token = localStorage.getItem('token');
-    const form = new FormData();
-    form.append('email', formData.email);
-    form.append('firstName', formData.firstName);
-    form.append('lastName', formData.lastName);
+    const formData = new FormData();
+    formData.append('email', email);
+    formData.append('firstName', firstName);
+    formData.append('lastName', lastName);
     if (profileImage) {
-      form.append('profileImage', profileImage);
+      formData.append('profileImage', profileImage);
     }
 
     try {
-      await axios.put('/api/users/profile', form, {
+      const token = localStorage.getItem('token');
+      await axios.put(`${API_BASE_URL}/api/users/profile`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'multipart/form-data',
         },
       });
-      window.location.reload(); // Rafraîchir la page pour voir les modifications
+      alert('Profile updated successfully!');
     } catch (error) {
-      console.error('Error updating profile:', error);
+      console.error('Error updating profile:', error.response?.data?.message || error.message);
     }
   };
 
-  if (!user) return <div>Loading...</div>;
-
   return (
-    <div className={`profile ${user.role}`}>
-      <h1>Profile</h1>
-      {user.profileImage && <img src={`/${user.profileImage}`} alt="Profile" className="profile-image" />}
+    <div className="profile-update">
+      <h1>Update Profile</h1>
       <form onSubmit={handleSubmit}>
-        <label>
-          Email:
-          <input type="email" name="email" value={formData.email} onChange={handleChange} />
-        </label>
-        <label>
-          First Name:
-          <input type="text" name="firstName" value={formData.firstName} onChange={handleChange} />
-        </label>
-        <label>
-          Last Name:
-          <input type="text" name="lastName" value={formData.lastName} onChange={handleChange} />
-        </label>
-        <label>
-          Profile Image:
-          <input type="file" name="profileImage" onChange={handleImageChange} />
-        </label>
-        <button type="submit">Update Profile</button>
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <input
+          type="text"
+          placeholder="First Name"
+          value={firstName}
+          onChange={(e) => setFirstName(e.target.value)}
+        />
+        <input
+          type="text"
+          placeholder="Last Name"
+          value={lastName}
+          onChange={(e) => setLastName(e.target.value)}
+        />
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleImageChange}
+        />
+        <button type="submit">Update</button>
       </form>
     </div>
   );
