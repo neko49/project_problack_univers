@@ -1,0 +1,35 @@
+/* ShopForm.css */
+.shop-form {
+    padding: 20px;
+    background: #fff;
+    margin: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .shop-form h2 {
+    margin-bottom: 20px;
+  }
+  
+  .shop-form input,
+  .shop-form textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+  }
+  
+  .shop-form button {
+    padding: 10px 20px;
+    background: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .shop-form button:hover {
+    background: #0056b3;
+  }
+  

@@ -9,12 +9,31 @@ const Signup = () => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [role, setRole] = useState('client');
+  const [profileImage, setProfileImage] = useState(null);
   const navigate = useNavigate();
+
+  const handleImageChange = (e) => {
+    setProfileImage(e.target.files[0]);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const formData = new FormData();
+    formData.append('email', email);
+    formData.append('password', password);
+    formData.append('firstName', firstName);
+    formData.append('lastName', lastName);
+    formData.append('role', role);
+    if (profileImage) {
+      formData.append('profileImage', profileImage);
+    }
+
     try {
-      await axios.post('/api/users/register', { email, password, firstName, lastName, role });
+      await axios.post('/api/users/register', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
       if (role === 'business') {
         navigate('/subscription-plans');
       } else {
@@ -57,6 +76,11 @@ const Signup = () => {
           <option value="client">Client</option>
           <option value="business">Business</option>
         </select>
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleImageChange}
+        />
         <button type="submit">Sign Up</button>
       </form>
     </div>

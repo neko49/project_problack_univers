@@ -396,3 +396,9 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# Node.js-specific ignores
+node_modules/
+
+# Ignorer le fichier .env dans le dossier backend
+backend/.env

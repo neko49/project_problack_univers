@@ -35,6 +35,24 @@ exports.getShopById = async (req, res) => {
   }
 };
 
+exports.updateShop = async (req, res) => {
+    try {
+      const shop = await Shop.findById(req.params.id);
+      if (!shop) {
+        return res.status(404).json({ message: 'Shop not found' });
+      }
+      if (shop.admin.toString() !== req.user.userId) {
+        return res.status(403).json({ message: 'Access denied' });
+      }
+  
+      Object.assign(shop, req.body);
+      const updatedShop = await shop.save();
+      res.json(updatedShop);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  };
+
 exports.deleteShop = async (req, res) => {
   try {
     const shop = await Shop.findById(req.params.id);
@@ -101,7 +119,7 @@ exports.getCategoriesAndStats = async (req, res) => {
     const categoriesSet = new Set();
     let totalReviews = 0;
     let totalVisitors = 0;
-    let newAnnouncements = 0; // Vous devez remplacer cela par une vraie logique
+    let newAnnouncements = 80; // Vous devez remplacer cela par une vraie logique
 
     shops.forEach(shop => {
       shop.categories.forEach(category => categoriesSet.add(category));

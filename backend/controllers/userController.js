@@ -1,6 +1,19 @@
 const User = require('../models/User');
 const argon2 = require('argon2');
 const jwt = require('jsonwebtoken');
+const multer = require('multer');
+const path = require('path');
+
+// Configure multer for file uploads
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/');
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + path.extname(file.originalname));
+    }
+});
+const upload = multer({ storage: storage });
 
 // Fonction pour enregistrer un utilisateur
 exports.registerUser = async (req, res) => {
@@ -19,7 +32,8 @@ exports.registerUser = async (req, res) => {
             password: hashedPassword,
             firstName,
             lastName,
-            role
+            role,
+            profileImage: req.file ? req.file.path : '' // Ajouter l'image de profil
         });
 
         await user.save();
@@ -77,3 +91,28 @@ exports.getUserProfile = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+// Fonction pour mettre à jour le profil de l'utilisateur
+exports.updateUserProfile = async (req, res) => {
+    try {
+        const user = await User.findById(req.user.userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Mettre à jour les informations utilisateur
+        user.email = req.body.email || user.email;
+        user.firstName = req.body.firstName || user.firstName;
+        user.lastName = req.body.lastName || user.lastName;
+        if (req.file) {
+            user.profileImage = req.file.path;
+        }
+
+        await user.save();
+        res.json(user);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+exports.upload = upload;

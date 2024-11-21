@@ -1,16 +1,28 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import logoImage from '../media/logo/logo_problacku_transparent.png';
 import './Navbar.css';
 
 const NavigationBar = () => {
   const navigate = useNavigate();
-  const isAuthenticated = !!localStorage.getItem('token'); 
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userRole, setUserRole] = useState('');
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      setIsAuthenticated(true);
+      const role = localStorage.getItem('role');
+      setUserRole(role);
+    }
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('userId');
     localStorage.removeItem('role');
+    setIsAuthenticated(false);
+    setUserRole('');
     navigate('/');
   };
 
@@ -29,9 +41,16 @@ const NavigationBar = () => {
             <li className="nav-item"><Link to="/boutique" className="nav-link">Nos Entreprises</Link></li>
             <li className="nav-item"><Link to="/news" className="nav-link">Nos News</Link></li>
             <li className="nav-item"><Link to="/contact" className="nav-link">Contact</Link></li>
-            {isAuthenticated ? (
-              <li className="nav-item"><button className="nav-link btn btn-link" onClick={handleLogout}>Déconnexion</button></li>
-            ) : (
+            {isAuthenticated && (
+              <>
+                <li className="nav-item"><Link to="/profile" className="nav-link">Profile</Link></li>
+                {userRole === 'business' && (
+                  <li className="nav-item"><Link to="/admin/dashboard" className="nav-link">Admin</Link></li>
+                )}
+                <li className="nav-item"><button className="nav-link btn btn-link" onClick={handleLogout}>Déconnexion</button></li>
+              </>
+            )}
+            {!isAuthenticated && (
               <>
                 <li className="nav-item"><Link to="/signup" className="nav-link">Inscription</Link></li>
                 <li className="nav-item"><Link to="/login" className="nav-link">Connexion</Link></li>
