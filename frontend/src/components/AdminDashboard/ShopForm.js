@@ -15,8 +15,8 @@ const ShopForm = () => {
     email: '',
     website: '',
     categories: '',
-    photos: '',
   });
+  const [photos, setPhotos] = useState([]); // Pour stocker les fichiers de photos
 
   useEffect(() => {
     if (id) {
@@ -24,14 +24,13 @@ const ShopForm = () => {
         try {
           const token = localStorage.getItem('token');
           const response = await axios.get(`${API_BASE_URL}api/shops/${id}`, {
-            headers: { Authorization: `Bearer ${token}` }
+            headers: { Authorization: `Bearer ${token}` },
           });
           const fetchedShop = response.data;
-          // Transform categories and photos to string
+          // Transform categories to string
           setShop({
             ...fetchedShop,
             categories: fetchedShop.categories.join(', '),
-            photos: fetchedShop.photos.join(', '),
           });
         } catch (error) {
           console.error('Error fetching shop:', error);
@@ -46,22 +45,36 @@ const ShopForm = () => {
     setShop({ ...shop, [name]: value });
   };
 
+  const handleFileChange = (e) => {
+    setPhotos(e.target.files); // Mise à jour des fichiers
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');
-      const formattedShop = {
+      const formData = new FormData();
+      formData.append('shop', JSON.stringify({
         ...shop,
         categories: shop.categories.split(',').map(category => category.trim()),
-        photos: shop.photos.split(',').map(photo => photo.trim()),
-      };
+      }));
+      Array.from(photos).forEach((photo) => {
+        formData.append('photos', photo);
+      });
+
       if (id) {
-        await axios.put(`${API_BASE_URL}api/shops/${id}`, formattedShop, {
-          headers: { Authorization: `Bearer ${token}` }
+        await axios.put(`${API_BASE_URL}api/shops/${id}`, formData, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data',
+          },
         });
       } else {
-        await axios.post(`${API_BASE_URL}api/shops`, formattedShop, {
-          headers: { Authorization: `Bearer ${token}` }
+        await axios.post(`${API_BASE_URL}api/shops`, formData, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data',
+          },
         });
       }
       navigate('/admin/shop-management');
@@ -77,7 +90,7 @@ const ShopForm = () => {
   return (
     <div className="shop-form">
       <h2>{id ? 'Edit Shop' : 'Create Shop'}</h2>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} encType="multipart/form-data">
         <input
           type="text"
           name="name"
@@ -134,11 +147,11 @@ const ShopForm = () => {
           required
         />
         <input
-          type="text"
+          type="file"
           name="photos"
-          value={shop.photos}
-          onChange={handleChange}
-          placeholder="Photos (comma separated URLs)"
+          multiple
+          onChange={handleFileChange}
+          accept="image/*"
         />
         <button type="submit">Save</button>
         <button type="button" onClick={handleCancel}>Cancel</button>

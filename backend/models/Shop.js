@@ -18,9 +18,9 @@ const shopSchema = new mongoose.Schema({
   email: { type: String, required: true },
   website: { type: String, required: true },
   categories: { type: [String], required: true },
-  photos: { type: [String], required: true },
+  photos: { type: [String], required: false }, // Permet d'uploader des fichiers
   reviews: [reviewSchema],
-  admin: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }
+  admin: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
 }, { timestamps: true });
 
 module.exports = mongoose.model('Shop', shopSchema);

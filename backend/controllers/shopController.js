@@ -1,21 +1,35 @@
 const Shop = require('../models/Shop');
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+const multer = require('multer');
+const cloudinary = require('cloudinary').v2;
 
-exports.getShops = async (req, res) => {
-    try {
-      const shops = await Shop.find();
-      res.json(shops);
-    } catch (error) {
-      res.status(500).json({ message: error.message });
-    }
-  };
+// Configuration Cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
+// Configuration Multer
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'shop_photos', // Dossier pour les photos des boutiques
+    allowed_formats: ['jpeg', 'png', 'jpg'],
+  },
+});
+const upload = multer({ storage });
+
+// Créer une boutique
 exports.createShop = async (req, res) => {
-  const shop = new Shop({
-    ...req.body,
-    admin: req.user.userId
-  });
-
+  const shopData = JSON.parse(req.body.shop);
+  const photos = req.files ? req.files.map(file => file.path) : [];
   try {
+    const shop = new Shop({
+      ...shopData,
+      photos,
+      admin: req.user.userId,
+    });
     const newShop = await shop.save();
     res.status(201).json(newShop);
   } catch (error) {
@@ -23,6 +37,17 @@ exports.createShop = async (req, res) => {
   }
 };
 
+// Récupérer toutes les boutiques
+exports.getShops = async (req, res) => {
+    try {
+      const shops = await Shop.find();
+      res.json(shops);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+};
+
+// Récupérer une boutique
 exports.getShopById = async (req, res) => {
   try {
     const shop = await Shop.findById(req.params.id);
@@ -35,30 +60,42 @@ exports.getShopById = async (req, res) => {
   }
 };
 
+// Mettre à jour une boutique
 exports.updateShop = async (req, res) => {
-    try {
-      const shop = await Shop.findById(req.params.id);
-      if (!shop) {
-        return res.status(404).json({ message: 'Shop not found' });
-      }
-      if (shop.admin.toString() !== req.user.userId) {
-        return res.status(403).json({ message: 'Access denied' });
-      }
-  
-      Object.assign(shop, req.body);
-      const updatedShop = await shop.save();
-      res.json(updatedShop);
-    } catch (error) {
-      res.status(500).json({ message: error.message });
-    }
-  };
-
-exports.deleteShop = async (req, res) => {
+  const shopData = JSON.parse(req.body.shop);
+  const photos = req.files ? req.files.map(file => file.path) : [];
   try {
     const shop = await Shop.findById(req.params.id);
+    if (!shop) return res.status(404).json({ message: 'Shop not found' });
     if (shop.admin.toString() !== req.user.userId) {
       return res.status(403).json({ message: 'Access denied' });
     }
+    Object.assign(shop, { ...shopData, photos });
+    const updatedShop = await shop.save();
+    res.json(updatedShop);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Supprimer une boutique
+exports.deleteShop = async (req, res) => {
+  try {
+    const shop = await Shop.findById(req.params.id);
+    if (!shop) return res.status(404).json({ message: 'Shop not found' });
+    if (shop.admin.toString() !== req.user.userId) {
+      return res.status(403).json({ message: 'Access denied' });
+    }
+
+    // Supprimer les photos de Cloudinary
+    if (shop.photos && shop.photos.length > 0) {
+      const deletionPromises = shop.photos.map(photo => {
+        const publicId = photo.split('/').pop().split('.')[0];
+        return cloudinary.uploader.destroy(`shop_photos/${publicId}`);
+      });
+      await Promise.all(deletionPromises);
+    }
+
     await shop.remove();
     res.json({ message: 'Boutique supprimée' });
   } catch (error) {
@@ -66,6 +103,7 @@ exports.deleteShop = async (req, res) => {
   }
 };
 
+// Statistiques des boutiques
 exports.getShopAnalytics = async (req, res) => {
   try {
     const shops = await Shop.find({ admin: req.user.userId });
@@ -90,6 +128,7 @@ exports.getShopAnalytics = async (req, res) => {
   }
 };
 
+// Ajouter un avis
 exports.submitReview = async (req, res) => {
     try {
       const { id } = req.params;
@@ -111,15 +150,16 @@ exports.submitReview = async (req, res) => {
       console.error("Error submitting review:", error);
       res.status(500).json({ message: error.message });
     }
-  };
+};
 
+// Statistiques des boutiques et catégories
 exports.getCategoriesAndStats = async (req, res) => {
   try {
     const shops = await Shop.find();
     const categoriesSet = new Set();
     let totalReviews = 0;
     let totalVisitors = 0;
-    let newAnnouncements = 80; // Vous devez remplacer cela par une vraie logique
+    let newAnnouncements = 0; // Vous devez remplacer cela par une vraie logique
 
     shops.forEach(shop => {
       shop.categories.forEach(category => categoriesSet.add(category));
@@ -134,7 +174,7 @@ exports.getCategoriesAndStats = async (req, res) => {
   }
 };
 
-
+// Recherche de boutiques
 exports.searchShops = async (req, res) => {
   try {
     const { term, location, category } = req.query;
@@ -167,3 +207,6 @@ exports.searchShops = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+// Exporter l'upload pour d'autres usages
+exports.upload = upload;
