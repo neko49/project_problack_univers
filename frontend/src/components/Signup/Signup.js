@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { API_BASE_URL } from '../../services/apiService'; // Import de l'URL de base
 import './Signup.css';
+import { API_BASE_URL } from '../../services/apiService';
+import { AuthContext } from '../../context/AuthContext';
 
 const Signup = () => {
   const [email, setEmail] = useState('');
@@ -11,6 +12,8 @@ const Signup = () => {
   const [lastName, setLastName] = useState('');
   const [role, setRole] = useState('client');
   const [profileImage, setProfileImage] = useState(null);
+
+  const { login } = React.useContext(AuthContext); // Utilise le contexte Auth
   const navigate = useNavigate();
 
   const handleImageChange = (e) => {
@@ -30,15 +33,21 @@ const Signup = () => {
     }
 
     try {
-      await axios.post(`${API_BASE_URL}api/users/register`, formData, {
+      const response = await axios.post(`${API_BASE_URL}api/users/register`, formData, {
         headers: {
-          'Content-Type': 'multipart/form-data'
-        }
+          'Content-Type': 'multipart/form-data',
+        },
       });
+
+      // Automatiquement connecter l'utilisateur après l'inscription
+      const { token, role: userRole } = response.data;
+      login(token, userRole);
+
+      // Redirection après inscription
       if (role === 'business') {
-        navigate('/subscription-plans');
+        navigate('/subscription-plans'); // Redirige vers la page des abonnements pour "business"
       } else {
-        navigate('/login');
+        navigate('/profile'); // Redirige vers le profil pour "client"
       }
     } catch (error) {
       console.error('Registration error:', error.response?.data?.message || error.message);

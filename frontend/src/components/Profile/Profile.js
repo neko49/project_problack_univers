@@ -34,6 +34,7 @@ const Profile = () => {
     <div className="profile">
       <h1>{profile.firstName} {profile.lastName}</h1>
       <img 
+        className="profile-image"
         src={profile.profileImage} 
         onError={(e) => {
           e.target.src = 'https://via.placeholder.com/150/000000/FFFFFF/?text=No+Profile+Image';

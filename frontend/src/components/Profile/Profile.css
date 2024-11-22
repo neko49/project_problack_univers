@@ -45,4 +45,12 @@
   .profile button:hover {
     background-color: #0056b3;
   }
+  .profile img {
+    width: 150px; /* Largeur de l'image */
+    height: 150px; /* Hauteur de l'image */
+    object-fit: cover; /* Garde les proportions de l'image */
+    border-radius: 50%; /* Rend l'image circulaire (optionnel) */
+    margin-bottom: 1rem; /* Ajoute un espace sous l'image */
+  }
+  
   

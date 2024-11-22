@@ -1,14 +1,25 @@
 import React from 'react';
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { API_BASE_URL } from '../../services/apiService';
 import './SubscriptionPlans.css';
 
 const SubscriptionPlans = () => {
   const navigate = useNavigate();
 
-  const handleSubscribe = (plan) => {
-    // Vous pouvez ajouter la logique pour gérer l'abonnement ici
-    console.log(`Selected plan: ${plan}`);
-    navigate('/login');
+  const handleSubscribe = async (plan) => {
+    try {
+      const token = localStorage.getItem('token');
+      await axios.post(
+        `${API_BASE_URL}api/users/subscribe`,
+        { plan },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      console.log(`Plan "${plan}" selected successfully`);
+      navigate('/profile'); // Redirige vers le profil après succès
+    } catch (error) {
+      console.error('Subscription error:', error.response?.data?.message || error.message);
+    }
   };
 
   return (
