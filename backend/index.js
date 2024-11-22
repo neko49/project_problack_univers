@@ -18,6 +18,9 @@ const corsOptions = {
         'https://problack-univers.vercel.app', // Remplacez par l'URL de votre frontend sur Vercel
         'http://localhost:3000' // Pour le développement local
     ],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Autoriser ces méthodes
+    allowedHeaders: ['Content-Type', 'Authorization'], // Autoriser ces en-têtes
+    exposedHeaders: ['Content-Type'], // Exposer des en-têtes nécessaires
     credentials: true, // Si vous utilisez des cookies ou des sessions
 };
 app.use(cors(corsOptions));
