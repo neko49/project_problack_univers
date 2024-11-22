@@ -37,7 +37,9 @@ const Profile = () => {
       <h1>{profile.firstName} {profile.lastName}</h1>
       <img 
         src={`${API_BASE_URL}${profile.profileImage}`} 
-        onError={(e) => { e.target.src = 'https://via.placeholder.com/150/000000/FFFFFF/?text=No+Profile+Image'; }}
+        onError={(e) => { 
+          console.error("Image load error:", e.target.src);
+          e.target.src = 'https://via.placeholder.com/150/000000/FFFFFF/?text=No+Profile+Image'; }}
         alt="Profile" />
       <p>Email: {profile.email}</p>
       <p>Role: {profile.role}</p>
