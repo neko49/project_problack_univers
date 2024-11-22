@@ -6,6 +6,7 @@ import './Profile.css';
 
 const Profile = () => {
   const [profile, setProfile] = useState(null);
+  const navigate = useNavigate(); 
 
   useEffect(() => {
     const fetchProfile = async () => {
