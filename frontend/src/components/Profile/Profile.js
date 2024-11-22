@@ -15,6 +15,10 @@ const Profile = () => {
             Authorization: `Bearer ${token}`,
           },
         });
+
+        console.log('Profile data:', response.data); // Vérifiez ici les données retournées
+        console.log('Image URL:', `${API_BASE_URL}${response.data.profileImage}`); // Vérifiez l'URL de l'image
+        
         setProfile(response.data);
       } catch (error) {
         console.error('Error fetching profile:', error.response?.data?.message || error.message);
