@@ -14,14 +14,11 @@ const PORT = process.env.PORT || 5001;
 
 // Configuration des options CORS
 const corsOptions = {
-    origin: [
-        'https://problack-univers.vercel.app', // Remplacez par l'URL de votre frontend sur Vercel
-        'http://localhost:3000' // Pour le développement local
-    ],
+    origin: '*', // Permet toutes les origines temporairement pour debug,
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Autoriser ces méthodes
     allowedHeaders: ['Content-Type', 'Authorization'], // Autoriser ces en-têtes
     exposedHeaders: ['Content-Type'], // Exposer des en-têtes nécessaires
-    credentials: true, // Si vous utilisez des cookies ou des sessions
+    credentials: false, // Si vous utilisez des cookies ou des sessions
 };
 app.use(cors(corsOptions));
 
