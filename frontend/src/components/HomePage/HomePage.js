@@ -207,7 +207,11 @@ const HomePage = () => {
           {Array.isArray(shops) && shops.length > 0 ? (
             shops.map((shop, index) => (
               <div key={index} className="shop-slide" onClick={() => handleShopDetails(shop._id)}>
-                <img src={shop.photos[0]} alt={shop.name} className="img-fluid" />
+                <img 
+                  src={shop.photos && shop.photos[0] ? shop.photos[0] : 'https://via.placeholder.com/250'} 
+                  alt={shop.name} 
+                  className="shop-image" 
+                />
                 <h3 className="text-center">{shop.name}</h3>
                 <p className="text-center">{shop.description}</p>
                 <button className="btn btn-primary d-block mx-auto">Voir les détails</button>
