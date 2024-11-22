@@ -25,7 +25,7 @@ const ProfileUpdate = () => {
 
     try {
       const token = localStorage.getItem('token');
-      await axios.put(`${API_BASE_URL}/api/users/profile`, formData, {
+      await axios.put(`${API_BASE_URL}api/users/profile`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'multipart/form-data',

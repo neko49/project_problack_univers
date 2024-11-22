@@ -24,7 +24,7 @@ const HomePage = () => {
   useEffect(() => {
     const fetchCategoriesAndStats = async () => {
       try {
-        const response = await axios.get(`${API_BASE_URL}/api/shops/categories/stats`);
+        const response = await axios.get(`${API_BASE_URL}api/shops/categories/stats`);
         console.log('Categories and stats:', response.data); // Débogage
         setCategories(response.data.categories || []); // Gestion des données nulles ou undefined
         setStats({
@@ -39,7 +39,7 @@ const HomePage = () => {
 
     const fetchShops = async () => {
       try {
-        const response = await axios.get(`${API_BASE_URL}/api/shops`);
+        const response = await axios.get(`${API_BASE_URL}api/shops`);
         console.log('Shops data:', response.data); // Débogage
         setShops(response.data || []); // Gestion des données nulles ou undefined
       } catch (error) {
@@ -55,7 +55,7 @@ const HomePage = () => {
   const handleSearch = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.get(`${API_BASE_URL}/api/shops/search`, {
+      const response = await axios.get(`${API_BASE_URL}api/shops/search`, {
         params: {
           term: searchTerm,
           location: searchLocation,
