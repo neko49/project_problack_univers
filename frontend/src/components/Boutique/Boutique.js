@@ -32,6 +32,13 @@ const Boutique = () => {
       <div className="shops">
         {shops.map((shop) => (
           <div key={shop._id} className="shop-item">
+            {shop.photos && shop.photos[0] && (
+              <img
+              src={shop.photos[0]}
+              alt={shop.name}
+              className="shop-image"
+              />
+              )}
             <h2>{shop.name}</h2>
             <p>{shop.description}</p>
             <Link to={`/boutique/${shop._id}`}>Voir les détails</Link>
