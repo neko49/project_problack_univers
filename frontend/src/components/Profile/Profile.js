@@ -45,7 +45,7 @@ const Profile = () => {
         alt="Profile" />
       <p>Email: {profile.email}</p>
       <p>Role: {profile.role}</p>
-      <button onClick={() => navigate('/profile-update')}>Modifier le Profil</button> 
+      <button onClick={() => navigate('/profile/update')}>Modifier le Profil</button> 
     </div>
   );
 };
