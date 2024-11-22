@@ -36,6 +36,7 @@ const Profile = () => {
     <div className="profile">
       <h1>{profile.firstName} {profile.lastName}</h1>
       <img 
+        crossorigin="anonymous"
         src={`${API_BASE_URL}${profile.profileImage}`} 
         onError={(e) => { 
           console.error("Image load error:", e.target.src);
