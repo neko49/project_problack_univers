@@ -136,31 +136,34 @@ exports.getCategoriesAndStats = async (req, res) => {
 
 
 exports.searchShops = async (req, res) => {
-    try {
-      const { term, location, category } = req.query;
-  
-      let query = Shop.find();
-  
-      if (term) {
-        query = query.or([
-          { name: { $regex: term, $options: 'i' } },
-          { description: { $regex: term, $options: 'i' } },
-        ]);
-      }
-  
-      if (location) {
-        query = query.where('address').regex(new RegExp(location, 'i'));
-      }
-  
-      if (category) {
-        query = query.where('categories').equals(category);
-      }
-  
-      const shops = await query.exec();
-  
-      res.json(shops);
-    } catch (error) {
-      console.error("Erreur lors de la recherche des boutiques :", error);
-      res.status(500).json({ message: error.message });
+  try {
+    const { term, location, category } = req.query;
+
+    console.log("Search parameters received:", { term, location, category }); // Debug
+
+    let query = Shop.find();
+
+    if (term) {
+      query = query.or([
+        { name: { $regex: term, $options: 'i' } },
+        { description: { $regex: term, $options: 'i' } },
+      ]);
     }
-  };
+
+    if (location) {
+      query = query.where('address').regex(new RegExp(location, 'i'));
+    }
+
+    if (category) {
+      query = query.where('categories').equals(category);
+    }
+
+    const shops = await query.exec();
+
+    console.log("Search results:", shops); // Debug
+    res.json(shops);
+  } catch (error) {
+    console.error("Erreur lors de la recherche des boutiques :", error);
+    res.status(500).json({ message: error.message });
+  }
+};
