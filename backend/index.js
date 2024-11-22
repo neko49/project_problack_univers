@@ -14,11 +14,13 @@ const PORT = process.env.PORT || 5001;
 
 // Configuration des options CORS
 const corsOptions = {
-    origin: '*', // Permet toutes les origines temporairement pour debug,
+    origin: [
+        'https://problack-univers.vercel.app', // Frontend hébergé sur Vercel
+        'http://localhost:3000' // Développement local
+    ],
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Autoriser ces méthodes
     allowedHeaders: ['Content-Type', 'Authorization'], // Autoriser ces en-têtes
-    exposedHeaders: ['Content-Type'], // Exposer des en-têtes nécessaires
-    credentials: false, // Si vous utilisez des cookies ou des sessions
+    credentials: true, // Si vous utilisez des cookies ou des sessions
 };
 app.use(cors(corsOptions));
 
@@ -33,6 +35,10 @@ app.use(morgan('dev'));
 // Configurez le serveur pour servir les fichiers statiques du dossier "uploads"
 app.use('/uploads', (req, res, next) => {
     console.log(`Requested file: ${req.path}`);
+
+    res.header('Access-Control-Allow-Origin', '*'); // Remplacez '*' par votre domaine spécifique si besoin
+    res.header('Access-Control-Allow-Methods', 'GET');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     next();
 }, express.static(path.join(__dirname, 'uploads')));
 

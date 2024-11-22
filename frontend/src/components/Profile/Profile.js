@@ -18,7 +18,7 @@ const Profile = () => {
 
         console.log('Profile data:', response.data); // Vérifiez ici les données retournées
         console.log('Image URL:', `${API_BASE_URL}${response.data.profileImage}`); // Vérifiez l'URL de l'image
-        
+
         setProfile(response.data);
       } catch (error) {
         console.error('Error fetching profile:', error.response?.data?.message || error.message);
@@ -35,7 +35,10 @@ const Profile = () => {
   return (
     <div className="profile">
       <h1>{profile.firstName} {profile.lastName}</h1>
-      <img src={`${API_BASE_URL}${profile.profileImage}`} alt="Profile" />
+      <img 
+        src={`${API_BASE_URL}${profile.profileImage}`} 
+        onError={(e) => { e.target.src = 'https://via.placeholder.com/150/000000/FFFFFF/?text=No+Profile+Image'; }}
+        alt="Profile" />
       <p>Email: {profile.email}</p>
       <p>Role: {profile.role}</p>
     </div>
