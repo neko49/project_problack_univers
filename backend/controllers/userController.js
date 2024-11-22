@@ -4,7 +4,6 @@ const jwt = require('jsonwebtoken');
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
-const path = require('path');
 
 // Configure Cloudinary
 cloudinary.config({
@@ -13,18 +12,18 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// Configure Multer with Cloudinary
+// Configure Multer avec Cloudinary
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
-    folder: 'profile_images', // Directory for profile images
-    allowed_formats: ['jpeg', 'png', 'jpg'], // Allowed file formats
+    folder: 'profile_images',
+    allowed_formats: ['jpeg', 'png', 'jpg'],
   },
 });
 
 const upload = multer({ storage });
 
-// Function to register a user
+// Fonction pour enregistrer un utilisateur
 exports.registerUser = async (req, res) => {
   const { email, password, firstName, lastName, role } = req.body;
 
@@ -51,7 +50,7 @@ exports.registerUser = async (req, res) => {
   }
 };
 
-// Function to update user profile
+// Fonction pour mettre à jour le profil utilisateur
 exports.updateUserProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user.userId);
@@ -63,11 +62,54 @@ exports.updateUserProfile = async (req, res) => {
     user.firstName = req.body.firstName || user.firstName;
     user.lastName = req.body.lastName || user.lastName;
     if (req.file) {
-      user.profileImage = req.file.path; // Cloudinary image URL
+      user.profileImage = req.file.path;
     }
 
     await user.save();
     res.json(user);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+exports.getUserProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.userId).select('-password');
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+exports.loginUser = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(401).json({ message: 'Invalid credentials' });
+    }
+
+    const isMatch = await argon2.verify(user.password, password);
+    if (!isMatch) {
+      return res.status(401).json({ message: 'Invalid credentials' });
+    }
+
+    const token = jwt.sign(
+      { userId: user._id, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: '1d' }
+    );
+
+    res.json({
+      message: 'Logged in successfully',
+      token,
+      userId: user._id,
+      role: user.role,
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
