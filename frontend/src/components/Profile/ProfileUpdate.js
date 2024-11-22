@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import du hook pour rediriger
 import axios from 'axios';
-import { API_BASE_URL } from '../../services/apiService'; // Import de l'URL de base
+import { useNavigate } from 'react-router-dom';
+import { API_BASE_URL } from '../../services/apiService';
 import './ProfileUpdate.css';
 
 const ProfileUpdate = () => {
@@ -9,7 +9,7 @@ const ProfileUpdate = () => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [profileImage, setProfileImage] = useState(null);
-  const navigate = useNavigate(); // Hook de navigation
+  const navigate = useNavigate();
 
   const handleImageChange = (e) => {
     setProfileImage(e.target.files[0]);
@@ -34,9 +34,9 @@ const ProfileUpdate = () => {
         },
       });
       alert('Profile updated successfully!');
-      navigate('/profile'); // Redirige vers le profil après succès
+      navigate('/profile');
     } catch (error) {
-      console.error('Error updating profile:', error.response?.data?.message || error.message);
+      console.error('Error updating profile:', error.message);
     }
   };
 
