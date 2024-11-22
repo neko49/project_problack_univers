@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import './Login.css';
+import { API_BASE_URL } from '../../services/apiService'; // Assurez-vous que le chemin est correct
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -11,7 +12,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('/api/users/login', { email, password });
+      const response = await axios.post(`${API_BASE_URL}api/users/login`, { email, password });
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('userId', response.data.userId);
       localStorage.setItem('role', response.data.role);
@@ -21,7 +22,7 @@ const Login = () => {
         navigate('/profile');
       }
     } catch (error) {
-      console.error('Authentication error:', error.response.data.message);
+      console.error('Authentication error:', error.response?.data?.message || error.message);
     }
   };
 
