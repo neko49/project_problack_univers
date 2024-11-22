@@ -31,7 +31,10 @@ app.use(helmet());
 app.use(morgan('dev'));
 
 // Configurez le serveur pour servir les fichiers statiques du dossier "uploads"
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', (req, res, next) => {
+    console.log(`Requested file: ${req.path}`);
+    next();
+}, express.static(path.join(__dirname, 'uploads')));
 
 app.use('/api/users', userRoutes);
 app.use('/api/shops', shopRoutes);
