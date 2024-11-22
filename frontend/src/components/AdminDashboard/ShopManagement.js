@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { API_BASE_URL } from '../../services/apiService';
 import { Link } from 'react-router-dom';
 import './ShopManagement.css';
 
@@ -10,7 +11,7 @@ const ShopManagement = () => {
     const fetchShops = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await axios.get('/api/shops', {
+        const response = await axios.get(`${API_BASE_URL}api/shops`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setShops(response.data);

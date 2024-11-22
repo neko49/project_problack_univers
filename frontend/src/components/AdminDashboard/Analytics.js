@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { API_BASE_URL } from '../../services/apiService';
 import './Analytics.css';
 import { Bar } from 'react-chartjs-2';
 import {
@@ -28,7 +29,7 @@ const Analytics = () => {
     const fetchAnalytics = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await axios.get('/api/shops/analytics', {
+        const response = await axios.get(`${API_BASE_URL}api/shops/analytics`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setAnalytics(response.data);

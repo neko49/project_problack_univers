@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { API_BASE_URL } from '../../services/apiService';
 import { useParams, useNavigate } from 'react-router-dom';
 import './ShopForm.css';
 
@@ -22,7 +23,7 @@ const ShopForm = () => {
       const fetchShop = async () => {
         try {
           const token = localStorage.getItem('token');
-          const response = await axios.get(`/api/shops/${id}`, {
+          const response = await axios.get(`${API_BASE_URL}api/shops/${id}`, {
             headers: { Authorization: `Bearer ${token}` }
           });
           const fetchedShop = response.data;
@@ -55,11 +56,11 @@ const ShopForm = () => {
         photos: shop.photos.split(',').map(photo => photo.trim()),
       };
       if (id) {
-        await axios.put(`/api/shops/${id}`, formattedShop, {
+        await axios.put(`${API_BASE_URL}api/shops/${id}`, formattedShop, {
           headers: { Authorization: `Bearer ${token}` }
         });
       } else {
-        await axios.post('/api/shops', formattedShop, {
+        await axios.post(`${API_BASE_URL}api/shops`, formattedShop, {
           headers: { Authorization: `Bearer ${token}` }
         });
       }
