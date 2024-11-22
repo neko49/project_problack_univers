@@ -20,6 +20,7 @@ const corsOptions = {
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Autoriser ces méthodes
     allowedHeaders: ['Content-Type', 'Authorization'], // Autoriser ces en-têtes
+    exposedHeaders: ['Content-Type', 'Authorization'], // Exposer des en-têtes nécessaires
     credentials: true, // Si vous utilisez des cookies ou des sessions
 };
 app.use(cors(corsOptions));
@@ -36,7 +37,8 @@ app.use(morgan('dev'));
 app.use('/uploads', (req, res, next) => {
     console.log(`Requested file: ${req.path}`);
 
-    res.header('Access-Control-Allow-Origin', '*'); // Remplacez '*' par votre domaine spécifique si besoin
+    res.header('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Origin', '*'); // Remplacez '*' par votre domaine spécifique si besoin
     res.header('Access-Control-Allow-Methods', 'GET');
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     next();
