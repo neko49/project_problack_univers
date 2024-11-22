@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { API_BASE_URL } from '../../services/apiService';
 import { useParams, useNavigate } from 'react-router-dom';
 import './BoutiqueDetails.css';
 
@@ -18,7 +19,7 @@ const BoutiqueDetails = () => {
           navigate('/login'); // Redirigez vers la page de connexion si pas de token
           return;
         }
-        const response = await axios.get(`/api/shops/${id}`, {
+        const response = await axios.get(`${API_BASE_URL}api/shops/${id}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setShop(response.data);
@@ -41,7 +42,7 @@ const BoutiqueDetails = () => {
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.post(`/api/shops/${id}/reviews`, review, {
+      const response = await axios.post(`${API_BASE_URL}api/shops/${id}/reviews`, review, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
@@ -52,7 +53,7 @@ const BoutiqueDetails = () => {
       setReview({ name: '', email: '', comment: '', quality: '', location: '', price: '', service: '' });
 
       // Rechargez les détails de la boutique pour afficher le nouveau commentaire
-      const updatedShop = await axios.get(`/api/shops/${id}`, {
+      const updatedShop = await axios.get(`${API_BASE_URL}api/shops/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setShop(updatedShop.data);

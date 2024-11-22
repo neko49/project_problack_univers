@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { API_BASE_URL } from '../../services/apiService';
 import { Link } from 'react-router-dom';
 import './Boutique.css';
 
@@ -10,7 +11,7 @@ const Boutique = () => {
   useEffect(() => {
     const fetchShops = async () => {
       try {
-        const response = await axios.get('/api/shops'); // Pas besoin de jeton ici
+        const response = await axios.get(`${API_BASE_URL}api/shops`); // Pas besoin de jeton ici
         setShops(response.data);
         setLoading(false);
       } catch (error) {

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { API_BASE_URL } from '../../services/apiService';
 import './Contact.css';
 
 const Contact = () => {
@@ -22,7 +23,7 @@ const Contact = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('/api/contact', formData);
+      await axios.post(`${API_BASE_URL}api/contact`, formData);
       setSubmitted(true);
       setError('');
     } catch (error) {
