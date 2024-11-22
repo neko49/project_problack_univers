@@ -31,7 +31,7 @@ const Profile = () => {
   return (
     <div className="profile">
       <h1>{profile.firstName} {profile.lastName}</h1>
-      <img src={`${API_BASE_URL}/${profile.profileImage}`} alt="Profile" />
+      <img src={`${API_BASE_URL}${profile.profileImage}`} alt="Profile" />
       <p>Email: {profile.email}</p>
       <p>Role: {profile.role}</p>
     </div>
