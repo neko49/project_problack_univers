@@ -9,10 +9,12 @@ module.exports = function authenticateToken(req, res, next) {
     }
 
     jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+        console.log('token: ', token)
         if (err) {
             console.error('Token verification failed:', err.message);
             return res.status(403).json({ message: 'Invalid or expired token' }); // Forbidden
         }
+        console.log('Authenticated user:', user);
         req.user = user; // Inclure les données de l'utilisateur dans la requête
         next();
     });

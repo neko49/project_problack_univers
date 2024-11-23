@@ -1,0 +1,43 @@
+{
+    "vision": {
+      "title": "Notre Vision",
+      "description": "Devenir la plus grande plateforme entrepreneuriale pour permettre à la communauté noire de consommer ce qu'elle produit et de produire pour conquérir le marché mondial.",
+      "values": ["Responsabilité", "Engagement", "Solidarité", "Optimisme"]
+    },
+    "mission": {
+      "title": "Notre Mission",
+      "description": "Stimuler et promouvoir l'entrepreneuriat et les investissements au sein de la communauté afrodescendante en offrant une plateforme intégrée regroupant plusieurs activités et services."
+    },
+    "founder": {
+      "name": "Sourou Dah Gbemenou",
+      "image": "sourou.jpg",
+      "description": "Consultant en informatique, monétique et métrologie, entrepreneur, investisseur et philanthrope. Il a fondé l'ONG Prospérité Pour Tous, militant et activiste panafricain plaidant pour une intégration saine et digne économiquement et socialement de la communauté noire en Occident."
+    },
+    "team": [
+      { "name": "Kim Sam Soon", "role": "Executive Director, Problack Investment Funds", "image": "kim.jpg" },
+      { "name": "Doriane Bouville", "role": "Deputy Executive Director, Problack Investment Funds", "image": "doriane.jpg" },
+      { "name": "Georgina Eyenga", "role": "Executive Director, Problack Negoce Agency", "image": "georgina.jpg" },
+      { "name": "Anna Mimboui", "role": "Executive Director, Problack Immo", "image": "anna.jpg" },
+      { "name": "Shola Deen", "role": "Executive Managing Director, Problack Academy", "image": "shola.jpg" },
+      { "name": "Serge Ekollé", "role": "Strategy, Development & Technology Director", "image": "serge.jpg" },
+      { "name": "Assane Magatte Seye", "role": "Director, Problack TV & Entertainment", "image": "assane.jpg" }
+    ],
+    "branches": [
+      { "name": "Problack Academy", "description": "Formation et renforcement de capacités" },
+      { "name": "Problack Television", "description": "Éducation, divertissement, business et culture afro" },
+      { "name": "Problack Talents", "description": "Détection et renforcement des jeunes talents" },
+      { "name": "Problack Investment Forum", "description": "Mise en relation entre entrepreneurs et investisseurs" },
+      { "name": "Problack Multi Services", "description": "Audit, conseils, gestion des risques et conformité" },
+      { "name": "Problack Communication & Media", "description": "Communication, publicité, création de contenu" },
+      { "name": "Problack Marketplace", "description": "Promotion et exposition des produits de nos entrepreneurs" },
+      { "name": "Problack Immo", "description": "Vente, achat et location de biens immobiliers" },
+      { "name": "Problack Negoce", "description": "Centrale d'achat et gestion des contrats" }
+    ],
+    "contacts": {
+      "phones": ["+44 7442 209086", "+33 6 95 52 91 42"],
+      "emails": ["contact@problacku.com", "hello@problacku.com"],
+      "address": "71-75 Shelton Street, Covent Garden, London WC2 9JQ, United Kingdom",
+      "social": "@problackunivers"
+    }
+  }
+  

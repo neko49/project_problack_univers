@@ -105,28 +105,38 @@ exports.deleteShop = async (req, res) => {
 
 // Statistiques des boutiques
 exports.getShopAnalytics = async (req, res) => {
+  console.log('getShopAnalytics called by user:', req.user);
   try {
-    const shops = await Shop.find({ admin: req.user.userId });
+      const shops = await Shop.find({ admin: req.user.userId });
+      console.log('Shops found:', shops); // Log les boutiques récupérées
 
-    const categoriesCount = {};
-    const reviewsCount = {};
+      const categoriesCount = {};
+      const reviewsCount = {};
 
-    shops.forEach((shop) => {
-      shop.categories.forEach((category) => {
-        categoriesCount[category] = (categoriesCount[category] || 0) + 1;
+      shops.forEach((shop) => {
+          const categories = shop.categories || []; // Assurez-vous que c'est un tableau
+          console.log('Categories:', categories); // Log les catégories
+          categories.forEach((category) => {
+              categoriesCount[category] = (categoriesCount[category] || 0) + 1;
+          });
+
+          const reviews = shop.reviews || []; // Assurez-vous que c'est un tableau
+          console.log('Reviews:', reviews); // Log les avis
+          reviews.forEach((review) => {
+              const rating = review.quality || 'N/A';
+              reviewsCount[rating] = (reviewsCount[rating] || 0) + 1;
+          });
       });
-
-      shop.reviews.forEach((review) => {
-        const rating = review.rating || 'N/A';
-        reviewsCount[rating] = (reviewsCount[rating] || 0) + 1;
-      });
-    });
-
-    res.json({ categoriesCount, reviewsCount });
+      
+      console.log('Categories count:', categoriesCount); // Log résultats des catégories
+      console.log('Reviews count:', reviewsCount); // Log résultats des avis
+      res.status(200).json({ categoriesCount, reviewsCount });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+      console.error('Error in getShopAnalytics:', error.message); // Log de l'erreur
+      res.status(500).json({ message: error.message });
   }
 };
+
 
 // Ajouter un avis
 exports.submitReview = async (req, res) => {
@@ -155,20 +165,55 @@ exports.submitReview = async (req, res) => {
 // Statistiques des boutiques et catégories
 exports.getCategoriesAndStats = async (req, res) => {
   try {
+    const now = new Date();
+    const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000); // Dernière semaine
+    const twoWeeksAgo = new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000); // Semaine précédente
+
+    // Récupérer toutes les boutiques
     const shops = await Shop.find();
+
     const categoriesSet = new Set();
     let totalReviews = 0;
     let totalVisitors = 0;
-    let newAnnouncements = 0; // Vous devez remplacer cela par une vraie logique
 
-    shops.forEach(shop => {
-      shop.categories.forEach(category => categoriesSet.add(category));
+    // Calcul des nouvelles annonces et des tendances
+    const newAnnouncements = shops.filter((shop) => new Date(shop.createdAt) > oneWeekAgo).length;
+    const announcementsLastWeek = shops.filter(
+      (shop) => new Date(shop.createdAt) > twoWeeksAgo && new Date(shop.createdAt) <= oneWeekAgo
+    ).length;
+
+    // Calcul par catégorie
+    const newAnnouncementsByCategory = {};
+    shops.forEach((shop) => {
+      shop.categories.forEach((category) => {
+        categoriesSet.add(category);
+        if (new Date(shop.createdAt) > oneWeekAgo) {
+          newAnnouncementsByCategory[category] = (newAnnouncementsByCategory[category] || 0) + 1;
+        }
+      });
       totalReviews += shop.reviews.length;
-      totalVisitors += shop.reviews.length * 2000; // Supposons que chaque commentaire représente 10 visiteurs
+      totalVisitors += shop.reviews.length * 2000; // Exemple : chaque avis représente 2000 visiteurs
     });
 
+    const avgReviewsNewShops =
+      shops.filter((shop) => new Date(shop.createdAt) > oneWeekAgo).reduce((sum, shop) => sum + shop.reviews.length, 0) /
+        newAnnouncements || 0;
+    const avgReviewsOldShops =
+      shops.filter((shop) => new Date(shop.createdAt) <= oneWeekAgo).reduce((sum, shop) => sum + shop.reviews.length, 0) /
+        (shops.length - newAnnouncements) || 0;
+
     const categories = Array.from(categoriesSet);
-    res.json({ categories, totalReviews, totalVisitors, newAnnouncements });
+
+    res.json({
+      categories,
+      totalReviews,
+      totalVisitors,
+      newAnnouncements,
+      announcementsLastWeek,
+      newAnnouncementsByCategory,
+      avgReviewsNewShops,
+      avgReviewsOldShops,
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
