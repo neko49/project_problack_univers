@@ -66,3 +66,24 @@
   padding: 20px;
   overflow-y: auto; /* Scrollable si nécessaire */
 }
+
+.analytics-toggle {
+  margin-bottom: 20px;
+  display: flex;
+  gap: 10px;
+}
+
+.analytics-toggle button {
+  padding: 10px 15px;
+  font-size: 1em;
+  color: white;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.analytics-toggle button:hover {
+  background-color: #0056b3;
+}

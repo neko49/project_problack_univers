@@ -99,4 +99,23 @@
   .add-review button:hover {
     background-color: #0056b3;
   }
-  
+  .engagement-buttons {
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
+}
+
+.engagement-buttons button {
+  padding: 10px 15px;
+  font-size: 1em;
+  color: white;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.engagement-buttons button:hover {
+  background-color: #0056b3;
+}

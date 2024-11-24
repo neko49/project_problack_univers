@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const cron = require('node-cron');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const helmet = require('helmet');
@@ -8,6 +9,7 @@ const userRoutes = require('./routes/userRoutes');
 const shopRoutes = require('./routes/shopRoutes');
 const contactRoutes = require('./routes/contactRoutes');
 const path = require('path');
+const { updateShopAnalytics } = require('./controllers/shopController');
 
 const app = express();
 const PORT = process.env.PORT || 5001;
@@ -47,6 +49,12 @@ app.use('/uploads', (req, res, next) => {
 app.use('/api/users', userRoutes);
 app.use('/api/shops', shopRoutes);
 app.use('/api/contact', contactRoutes);
+
+// Planification des mises à jour analytiques tous les jours à minuit
+cron.schedule('0 0 * * *', async () => {
+    console.log('Running daily analytics update...');
+    await updateShopAnalytics();
+  });
 
 // Configuration pour servir le frontend en production
 if (process.env.NODE_ENV === 'production') {

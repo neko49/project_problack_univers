@@ -9,7 +9,15 @@ const BoutiqueDetails = () => {
   const navigate = useNavigate();
   const [shop, setShop] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [review, setReview] = useState({ name: '', email: '', comment: '', quality: '', location: '', price: '', service: '' });
+  const [review, setReview] = useState({
+    name: '',
+    email: '',
+    comment: '',
+    quality: '',
+    location: '',
+    price: '',
+    service: '',
+  });
 
   useEffect(() => {
     const fetchShop = async () => {
@@ -19,10 +27,15 @@ const BoutiqueDetails = () => {
           navigate('/login'); // Redirigez vers la page de connexion si pas de token
           return;
         }
+
+        // Récupération des détails de la boutique
         const response = await axios.get(`${API_BASE_URL}api/shops/${id}`, {
-          headers: { Authorization: `Bearer ${token}` }
+          headers: { Authorization: `Bearer ${token}` },
         });
         setShop(response.data);
+
+        // Suivi des clics
+        await axios.post(`${API_BASE_URL}api/shops/${id}/click`);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching shop details:', error);
@@ -43,22 +56,45 @@ const BoutiqueDetails = () => {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.post(`${API_BASE_URL}api/shops/${id}/reviews`, review, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` },
       });
 
-      // Log the response for debugging
-      console.log("Review submitted successfully:", response.data);
+      console.log('Review submitted successfully:', response.data);
 
-      // Réinitialisez le formulaire après soumission
       setReview({ name: '', email: '', comment: '', quality: '', location: '', price: '', service: '' });
 
-      // Rechargez les détails de la boutique pour afficher le nouveau commentaire
+      // Recharge les détails pour inclure le nouvel avis
       const updatedShop = await axios.get(`${API_BASE_URL}api/shops/${id}`, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` },
       });
       setShop(updatedShop.data);
     } catch (error) {
       console.error('Error submitting review:', error);
+    }
+  };
+
+  const handleLike = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.post(`${API_BASE_URL}api/shops/${id}/like`, null, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      alert(`Boutique aimée ! Nombre de J'aime : ${response.data.likes}`);
+      setShop({ ...shop, likes: response.data.likes });
+    } catch (error) {
+      console.error('Error liking shop:', error);
+    }
+  };
+
+  const handleFavorite = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.post(`${API_BASE_URL}api/shops/${id}/favorite`, null, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      alert(response.data.message);
+    } catch (error) {
+      console.error('Error favoriting shop:', error);
     }
   };
 
@@ -73,17 +109,28 @@ const BoutiqueDetails = () => {
         <p><strong>Address:</strong> {shop.address}</p>
         <p><strong>Phone:</strong> {shop.phone}</p>
         <p><strong>Email:</strong> {shop.email}</p>
-        <p><strong>Website:</strong> <a href={shop.website} target="_blank" rel="noopener noreferrer">{shop.website}</a></p>
+        <p>
+          <strong>Website:</strong>{' '}
+          <a href={shop.website} target="_blank" rel="noopener noreferrer">
+            {shop.website}
+          </a>
+        </p>
       </div>
       <div className="categories">
         {shop.categories.map((category, index) => (
-          <span key={index} className="category">{category}</span>
+          <span key={index} className="category">
+            {category}
+          </span>
         ))}
       </div>
       <div className="gallery">
         {shop.photos.map((photo, index) => (
           <img key={index} src={photo} alt={`${shop.name} ${index}`} />
         ))}
+      </div>
+      <div className="engagement-buttons">
+        <button onClick={handleLike}>👍 J'aime ({shop.likes || 0})</button>
+        <button onClick={handleFavorite}>⭐ Ajouter aux Favoris</button>
       </div>
       <div className="reviews">
         <h2>Reviews</h2>
@@ -101,69 +148,13 @@ const BoutiqueDetails = () => {
       <div className="add-review">
         <h2>Add Review</h2>
         <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            name="name"
-            value={review.name}
-            onChange={handleChange}
-            placeholder="Your Name"
-            required
-          />
-          <input
-            type="email"
-            name="email"
-            value={review.email}
-            onChange={handleChange}
-            placeholder="Your Email"
-            required
-          />
-          <textarea
-            name="comment"
-            value={review.comment}
-            onChange={handleChange}
-            placeholder="Your Review"
-            required
-          />
-          <input
-            type="number"
-            name="quality"
-            value={review.quality}
-            onChange={handleChange}
-            placeholder="Quality (1-5)"
-            min="1"
-            max="5"
-            required
-          />
-          <input
-            type="number"
-            name="location"
-            value={review.location}
-            onChange={handleChange}
-            placeholder="Location (1-5)"
-            min="1"
-            max="5"
-            required
-          />
-          <input
-            type="number"
-            name="price"
-            value={review.price}
-            onChange={handleChange}
-            placeholder="Price (1-5)"
-            min="1"
-            max="5"
-            required
-          />
-          <input
-            type="number"
-            name="service"
-            value={review.service}
-            onChange={handleChange}
-            placeholder="Service (1-5)"
-            min="1"
-            max="5"
-            required
-          />
+          <input type="text" name="name" value={review.name} onChange={handleChange} placeholder="Your Name" required />
+          <input type="email" name="email" value={review.email} onChange={handleChange} placeholder="Your Email" required />
+          <textarea name="comment" value={review.comment} onChange={handleChange} placeholder="Your Review" required />
+          <input type="number" name="quality" value={review.quality} onChange={handleChange} placeholder="Quality (1-5)" min="1" max="5" required />
+          <input type="number" name="location" value={review.location} onChange={handleChange} placeholder="Location (1-5)" min="1" max="5" required />
+          <input type="number" name="price" value={review.price} onChange={handleChange} placeholder="Price (1-5)" min="1" max="5" required />
+          <input type="number" name="service" value={review.service} onChange={handleChange} placeholder="Service (1-5)" min="1" max="5" required />
           <button type="submit">Submit Review</button>
         </form>
       </div>

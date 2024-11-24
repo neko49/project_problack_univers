@@ -253,5 +253,134 @@ exports.searchShops = async (req, res) => {
   }
 };
 
-// Exporter l'upload pour d'autres usages
+/// Fonction pour gérer les "J'aime"
+exports.likeShop = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const shop = await Shop.findById(id);
+    if (!shop) return res.status(404).json({ message: 'Shop not found' });
+
+    shop.likes += 1;
+    await updateDailyInteraction(shop, 'likes');
+    res.status(200).json({ message: 'Shop liked successfully', likes: shop.likes });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+//
+exports.toggleFavoriteShop = async (req, res) => {
+  try {
+    const { id } = req.params; // ID de la boutique
+    const userId = req.user.userId; // ID de l'utilisateur connecté
+    const shop = await Shop.findById(id);
+    if (!shop) return res.status(404).json({ message: 'Shop not found' });
+
+    if (shop.favorites.includes(userId)) {
+      shop.favorites = shop.favorites.filter(favId => favId.toString() !== userId.toString());
+      res.status(200).json({ message: 'Removed from favorites', favorites: shop.favorites });
+    } else {
+      shop.favorites.push(userId);
+      res.status(200).json({ message: 'Added to favorites', favorites: shop.favorites });
+    }
+
+    await shop.save();
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Fonction pour suivre les clics
+exports.trackClick = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const shop = await Shop.findById(id);
+    if (!shop) return res.status(404).json({ message: 'Shop not found' });
+
+    await updateDailyInteraction(shop, 'clicks');
+    res.status(200).json({ message: 'Click tracked successfully', clicks: shop.clicks });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Fonction pour gérer les interactions quotidiennes
+const updateDailyInteraction = async (shop, field) => {
+  const today = new Date().toISOString().split('T')[0];
+  const interaction = shop.interactions.find((i) => i.date.toISOString().split('T')[0] === today);
+
+  if (interaction) {
+    interaction[field] += 1;
+  } else {
+    shop.interactions.push({ date: new Date(), [field]: 1 });
+  }
+  await shop.save();
+};
+
+// Fonction pour mettre à jour les statistiques analytiques
+const updateShopAnalytics = async () => {
+  try {
+    const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+
+    const shops = await Shop.find();
+    for (const shop of shops) {
+      const last7DaysClicks = shop.interactions
+        .filter((i) => i.date >= oneWeekAgo)
+        .reduce((acc, i) => acc + i.clicks, 0);
+
+      const last7DaysLikes = shop.interactions
+        .filter((i) => i.date >= oneWeekAgo)
+        .reduce((acc, i) => acc + i.likes, 0);
+
+      const last7DaysFavorites = shop.interactions
+        .filter((i) => i.date >= oneWeekAgo)
+        .reduce((acc, i) => acc + i.shares, 0);
+
+      shop.analytics = {
+        last7DaysClicks,
+        last7DaysLikes,
+        last7DaysFavorites,
+      };
+      await shop.save();
+    }
+    console.log('Analytics updated successfully!');
+  } catch (error) {
+    console.error('Error updating analytics:', error);
+  }
+};
+
+// Exporter les fonctions nécessaires
 exports.upload = upload;
+exports.updateShopAnalytics = updateShopAnalytics;
+
+//
+exports.getAdminAnalytics = async (req, res) => {
+  try {
+    const adminId = req.user.userId; // ID de l'admin connecté
+    const shops = await Shop.find({ admin: adminId });
+    let totalClicks = 0;
+    let totalLikes = 0;
+    let totalFavorites = 0;
+
+    shops.forEach((shop) => {
+      totalClicks += shop.clicks;
+      totalLikes += shop.likes;
+      totalFavorites += shop.favorites.length;
+    });
+
+    res.status(200).json({
+      totalClicks,
+      totalLikes,
+      totalFavorites,
+      analytics: shops.map(shop => ({
+        shopName: shop.name,
+        clicks: shop.clicks,
+        likes: shop.likes,
+        favorites: shop.favorites.length,
+      }))
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+

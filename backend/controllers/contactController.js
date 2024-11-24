@@ -12,14 +12,14 @@ exports.sendContactForm = async (req, res) => {
       service: 'Gmail',
       auth: {
         user: 'rasfrej23@gmail.com', // Replace with your email
-        pass: 'Etudiantfrancais20192020', // Replace with your email password
+        pass: 'yofi oxeo cuyp wszr', // Replace with your email password
       },
     });
 
     // Setup email data
     const mailOptions = {
       from: email,
-      to: 'rasfraj23@gmail.com', // Replace with your email
+      to: 'rasfrej23@gmail.com', // Replace with your email
       subject: `Contact form submission from ${name}`,
       text: `Name: ${name}\nEmail: ${email}\nMessage: ${message}`,
     };
